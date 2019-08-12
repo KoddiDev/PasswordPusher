@@ -30,24 +30,24 @@ task :development do
     role :web, DEVELOPMENT_WEB
     role :app, DEVELOPMENT_APP
     role :console, DEVELOPMENT_CONSOLE
-    role :db,  DEVELOPMENT_DB, :primary => true
+    role :db,  DEVELOPMENT_DB_HOST, :primary => true
     set :deploy_to, DEVELOPMENT_DEPLOY_TO
     set :user, DEVELOPMENT_USER
 end
 
-desc "Run tasks in staging environment (kenny)"
+desc "Run tasks in staging environment"
 task :staging do
     set :stage, 'staging'
     set :bundle_without,  [:test, :development, :preview]
+    set (:bundle_cmd) { "/home/deployer/.rbenv/shims/bundle" }
     set :rails_env, 'staging'
     default_environment['RAILS_ENV'] = 'staging'
-    set :rvm_ruby_string, 'ruby-1.9.3-p194'
 
     # Staging Config
     role :web, STAGING_WEB
     role :app, STAGING_APP
     role :console, STAGING_CONSOLE
-    role :db,  STAGING_DB, :primary => true
+    role :db,  STAGING_DB_HOST, :primary => true
     set :deploy_to, STAGING_DEPLOY_TO
     set :user, STAGING_USER
 end
@@ -58,13 +58,12 @@ task :preview do
     set :bundle_without,  [:test, :development]
     set :rails_env, 'preview'
     default_environment['RAILS_ENV'] = 'preview'
-    set :rvm_ruby_string, 'ruby-1.9.3-p194'
 
     # Preview Config
     role :web, PREVIEW_WEB
     role :app, PREVIEW_APP
     role :console, PREVIEW_CONSOLE
-    role :db,  PREVIEW_DB, :primary => true
+    role :db,  PREVIEW_DB_HOST, :primary => true
     set :deploy_to, PREVIEW_DEPLOY_TO
     set :user, PREVIEW_USER
 end
@@ -92,7 +91,7 @@ task :production do
     role :web, PRODUCTION_WEB
     role :app, PRODUCTION_APP
     role :console, PRODUCTION_CONSOLE
-    role :db,  PRODUCTION_DB, :primary => true
+    role :db,  PRODUCTION_DB_HOST, :primary => true
     set :deploy_to, PRODUCTION_DEPLOY_TO
     set :user, PRODUCTION_USER
 end
@@ -126,10 +125,35 @@ end
 desc "Open a remote console."
 task :console, :roles => :console do
   input = ''
-  run "cd #{current_path} && bundle exec rails console #{ENV['RAILS_ENV']}" do |channel, stream, data|
+  run "cd #{current_path} && /usr/local/rbenv/shims/bundle exec rails console #{ENV['RAILS_ENV']}" do |channel, stream, data|
     next if data.chomp == input.chomp || data.chomp == ''
     print data
     channel.send_data(input = $stdin.gets) if data =~ /:\d{3}:\d+(\*|>)/
+  end
+end
+
+desc "tail production log files"
+task :tail_logs, :roles => :app do
+  run "tail -f #{shared_path}/log/#{stage}.log" do |channel, stream, data|
+    trap("INT") { puts 'Interupted'; exit 0; }
+    puts  # for an extra line break before the host name
+    puts "#{channel[:host]}: #{data}"
+    break if stream == :err
+  end
+end
+
+after "deploy", "deploy:notifications"
+namespace :deploy do
+  desc "Notify all services that there was a deploy."
+  task :notifications do
+    traceview_deploy
+  end
+
+  desc "Notify TraceView of a deploy"
+  task :traceview_deploy, :roles => :app do
+    set :notification_msg, "Deployed to 'PasswordPusher' #{stage} branch #{branch}"
+    puts "  ** Sending notification to TraceView for 'PasswordPusher'"
+    run "if test -x /usr/bin/tlog; then /usr/bin/tlog -a \"Gameface\" -m \"#{notification_msg}\"; else echo \"WARNING: /usr/bin/tlog not found.  TraceView deploy notification not sent.\"; fi"      
   end
 end
 
@@ -137,4 +161,5 @@ require './config/boot'
 require "bundler/capistrano"
 load 'deploy/assets'
 require "./config/capistrano_database_yml"
+require 'airbrake/capistrano'
 

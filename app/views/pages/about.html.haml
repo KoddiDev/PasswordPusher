@@ -8,7 +8,7 @@
 
 .about_content
   %p
-    PasswordPusher is a Ruby application to communicate passwords over the web. Links to passwords expire after a certain number of views and/or time has passed. Hosted at
+    PasswordPusher is an application to communicate passwords over the web. Links to passwords expire after a certain number of views and/or time has passed. Hosted at
     = succeed '.' do
       = link_to "pwpush.com", "https://pwpush.com"
 
@@ -26,32 +26,54 @@
       = link_to "pwpush.com", "https://pwpush.com"
     It's up to you.
 
+%p{ :style => 'clear: both;' }
+  %h1 About Me
+
+.about_content
   %p
-    This is me (Peter Giacomo Lombardo) on
+    My name is Peter Giacomo Lombardo.  You can find me on
     = link_to "LinkedIn", "http://it.linkedin.com/in/peterlombardo"
     and
     = succeed "." do
       = link_to "Github", "https://github.com/pglombardo"
 
   %p
-    For updates, you can
-    = succeed "," do
-      = link_to "follow me on Twitter", "https://twitter.com/pglombardo"
-    = link_to "Github", "https://github.com/pglombardo"
-    or on the
-    = succeed "." do
-      = link_to "Tumblr blog", "http://blog.gameface.in/"
+    On a normal day, I spend my time building
+    = link_to "Instana", "https://www.instana.com/"
+    and others days working on tools like PasswordPusher.
 
-%h1 Related
+  %p
+    For updates, you can
+    = link_to "follow me on Twitter", "https://twitter.com/pglombardo"
+    or
+    = succeed "." do
+      = link_to "Github", "https://github.com/pglombardo"
+
+  %p
+
+
+%h1 Password Pusher Tools & Utilities
 
 .about_content
   %ul
     %li
-      For
-      = link_to "Alfred app", "http://www.alfredapp.com/"
-      users on Mac, an
-      = link_to "workflow", "http://www.packal.org/workflow/passwordpusher"
-      to quickly push passwords.
+      A
+      = link_to "PowerShell script", "https://github.com/kprocyszyn/tools"
+      for Password Pusher by
+      = link_to "Kamil Procyszyn", "https://twitter.com/kprocyszyn/status/970413009511251968"
+    %li
+      A
+      = link_to "nodeJS CLI wrapper", "https://github.com/lnfnunes/pwpush-cli"
+      to easily push passwords to pwpush.com
+    %li
+      An
+      = link_to "Alfred App Workflow", "http://www.packal.org/workflow/passwordpusher"
+      to quickly push passwords from your Mac
+    %li
+      See also
+      = succeed "." do
+        = link_to 'IRC2HipChat', 'https://pglombardo.github.io/IRC2HipChat/'
+      An IRC to Hipchat bridge
 
 %h1 Publicity
 
@@ -145,15 +167,6 @@
       put together a PHP port of PasswordPusher:
       = link_to "PHPasswordPusher", "https://github.com/bemosior/PHPasswordPusher"
 
-
-.about_content
-  %p
-    I also run
-    = succeed "." do
-      = link_to "Gameface", "http://gameface.in"
-    A site to showcase games, the people who play them and the characters they play.
-
 .about_content
   %div{ :style => 'float: left; font-size: .8em; margin-bottom: 50px;' }
     = link_to '[ Back to front page ]', root_path
-

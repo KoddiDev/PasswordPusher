@@ -8,13 +8,13 @@
   %p.payload
     = f.text_field(:payload, { :class => "password", :value => PAYLOAD_INITIAL_TEXT, :onfocus => "prepareTextField(this)", :onblur => "revertTextField(this)", :autocomplete => "off" })
   %p
-    Delete password after:
+    Expire secret link and delete the stored password after:
     %p.slider_box
-      = range_field_tag("password_expire_after_days", EXPIRE_AFTER_DAYS_DEFAULT, {:name => "password[expire_after_days]", :class => "slider", :min => EXPIRE_AFTER_DAYS_MIN, :max => EXPIRE_AFTER_DAYS_MAX, :step => "1", :onchange => "showDaysValue(this.value)"})
+      = range_field_tag("password_expire_after_days", EXPIRE_AFTER_DAYS_DEFAULT, {:name => "password[expire_after_days]", :class => "slider", :min => EXPIRE_AFTER_DAYS_MIN, :max => EXPIRE_AFTER_DAYS_MAX, :step => "1", :onchange => "showDaysValue(this.value)", :oninput => "showDaysValue(this.value)"})
       %span#daysrange
         == #{EXPIRE_AFTER_DAYS_DEFAULT} Days
     %p.slider_box
-      = range_field_tag("password_expire_after_views", EXPIRE_AFTER_VIEWS_DEFAULT, {:name => "password[expire_after_views]", :class => "slider", :min => EXPIRE_AFTER_VIEWS_MIN, :max => EXPIRE_AFTER_VIEWS_MAX, :step => "1", :onchange => "showViewsValue(this.value)"})
+      = range_field_tag("password_expire_after_views", EXPIRE_AFTER_VIEWS_DEFAULT, {:name => "password[expire_after_views]", :class => "slider", :min => EXPIRE_AFTER_VIEWS_MIN, :max => EXPIRE_AFTER_VIEWS_MAX, :step => "1", :onchange => "showViewsValue(this.value)", :oninput => "showViewsValue(this.value)"})
       %span#viewsrange
         == #{EXPIRE_AFTER_VIEWS_DEFAULT} Views
     %br
@@ -41,7 +41,7 @@
     * Tip: Only enter the password into the box.  Other identifying information can compromise security.
   %p
   %span.note
-    All passwords are encrypted prior to storage and are available to only those with the direct link.
+    All passwords are encrypted prior to storage and are available to only those with the secret link.
   %br/
   %span.note
     Once expired, encrypted passwords are unequivocally deleted from the database.
@@ -53,16 +53,16 @@
   = link_to "@psteinweber", "https://github.com/pglombardo/PasswordPusher/issues/29"
   for the idea.
 
-- if Rails.env == "production" or Rails.env == "development"
-  %p.notes
-    = link_to "About PasswordPusher", page_path('about')
-    \|
-    = link_to "Images, Logos and Icons", 'https://github.com/pglombardo/PasswordPusher/tree/master/app/assets/images'
-    %br/
-    Follow me on:
-    = succeed "," do
-      = link_to "@Twitter", "https://twitter.com/pglombardo"
-    = link_to "@Github", "https://github.com/pglombardo"
-    &amp;
-    = link_to "@Tumblr", "http://blog.gameface.in/"
-
+%p.notes
+  = link_to "FAQ", page_path('faq')
+  \|
+  = link_to "Images, Logos and Icons", 'https://github.com/pglombardo/PasswordPusher/tree/master/app/assets/images'
+  \|
+  = link_to "About PasswordPusher", page_path('about')
+  %br/
+  Follow me on:
+  = succeed "," do
+    = link_to "@Twitter", "https://twitter.com/pglombardo"
+  = link_to "@Github", "https://github.com/pglombardo"
+  &amp;
+  = link_to "@Tumblr", "http://blog.gameface.in/"
